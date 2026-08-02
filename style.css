@@ -297,3 +297,7 @@ body {
   height: auto;
   object-fit: initial;
 }
+.topbar a.tab {
+  text-decoration: none;
+  display: inline-block;
+}
