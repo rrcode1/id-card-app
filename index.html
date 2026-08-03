@@ -10,11 +10,9 @@
 <body>
 
   <div class="topbar">
-    <button id="showViewBtn" class="tab active">View ID</button>
-    <button id="showEditBtn" class="tab">Edit</button>
+    <a href="edit.html" class="tab">Edit</a>
   </div>
 
-  <!-- ================= VIEW MODE ================= -->
   <div id="viewPage">
 
     <div class="card">
@@ -54,18 +52,8 @@
           </div>
         </div>
       </div>
-
-      <div class="signature-section">
-        <span class="display-label">Signature</span>
-        <img id="viewSignature" alt="Signature" style="max-width:100%; display:none;">
-      </div>
-
-      <div class="message-section">
-        <span id="viewMessage" class="card-message"></span>
-      </div>
     </div>
 
-    <!-- Additional Details card -->
     <div class="card extra-card">
       <div class="subheader">Additional Details</div>
       <div class="card-body-column">
@@ -91,140 +79,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Free image + subtitle card -->
-    <div class="card extra-card">
-      <div class="card-body-column">
-        <div class="extra-image-area large">
-          <img id="viewExtraImage" src="" alt="Extra" style="display:none;">
-          <span id="viewExtraImagePlaceholder">No image added</span>
-        </div>
-        <span id="viewExtraSubtitle" class="card-message center"></span>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- ================= EDIT MODE ================= -->
-  <div id="editPage" style="display:none;">
-
-    <div class="card">
-      <div class="header" id="bannerAreaEdit">
-        <div class="logo-area" id="logoAreaEdit">
-          <span id="logoPlaceholder">Logo</span>
-          <img id="logoPreview" src="" alt="Logo" style="display:none;">
-        </div>
-        <input type="file" id="logoInput" accept="image/*" style="display:none;">
-        <h1>EDIT MY ID</h1>
-      </div>
-      <input type="file" id="bannerInput" accept="image/*" style="display:none;">
-
-      <div class="card-body">
-        <div class="photo-area" id="photoArea">
-          <span id="photoPlaceholder">Tap to add photo</span>
-          <img id="photoPreview" src="" alt="Your photo" style="display:none;">
-        </div>
-        <input type="file" id="photoInput" accept="image/*" style="display:none;">
-
-        <div class="fields">
-          <div class="field">
-            <label for="idNumber">ID Number</label>
-            <input type="text" id="idNumber" placeholder="000000">
-          </div>
-
-          <div class="field">
-            <label for="dob">Date of Birth</label>
-            <input type="date" id="dob">
-          </div>
-
-          <div class="field">
-            <label for="fullName">Name</label>
-            <textarea id="fullName" rows="1" placeholder="Your name"></textarea>
-          </div>
-
-          <div class="field">
-            <label for="sex">Sex</label>
-            <select id="sex">
-              <option value="">Select</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label for="address">Address</label>
-            <textarea id="address" rows="2" placeholder="Your address"></textarea>
-          </div>
-
-          <div class="field">
-            <label for="expiryDate">Expiry Date</label>
-            <input type="date" id="expiryDate">
-          </div>
-        </div>
-      </div>
-
-      <div class="signature-section">
-        <label>Signature</label>
-        <canvas id="signaturePad" width="300" height="80"></canvas>
-        <button id="clearSig" type="button">Clear</button>
-      </div>
-
-      <div class="field message-field">
-        <label for="message">Message</label>
-        <textarea id="message" rows="2" placeholder="Add a note or message"></textarea>
-      </div>
-    </div>
-
-    <!-- Additional Details edit -->
-    <div class="card extra-card">
-      <div class="subheader">Additional Details</div>
-      <div class="card-body-column">
-        <div class="field">
-          <label for="email">Email</label>
-          <input type="email" id="email" placeholder="you@example.com">
-        </div>
-        <div class="field">
-          <label for="phone">Phone Number</label>
-          <input type="tel" id="phone" placeholder="Your phone number">
-        </div>
-        <div class="field">
-          <label for="familyName">Family Name</label>
-          <input type="text" id="familyName" placeholder="Family name">
-        </div>
-        <div class="field">
-          <label for="conditions">Conditions</label>
-          <textarea id="conditions" rows="2" placeholder="Any conditions"></textarea>
-        </div>
-
-        <div class="field">
-          <label>Barcode / Image</label>
-          <div class="extra-image-area barcode" id="barcodeArea">
-            <span id="barcodePlaceholder">Tap to add image</span>
-            <img id="barcodePreview" src="" alt="Barcode" style="display:none;">
-          </div>
-          <input type="file" id="barcodeInput" accept="image/*" style="display:none;">
-        </div>
-      </div>
-    </div>
-
-    <!-- Free image + subtitle edit -->
-    <div class="card extra-card">
-      <div class="card-body-column">
-        <div class="extra-image-area large" id="extraImageArea">
-          <span id="extraImagePlaceholder">Tap to add image</span>
-          <img id="extraImagePreview" src="" alt="Extra" style="display:none;">
-        </div>
-        <input type="file" id="extraImageInput" accept="image/*" style="display:none;">
-
-        <div class="field">
-          <label for="extraSubtitle">Subtitle</label>
-          <input type="text" id="extraSubtitle" placeholder="Add a caption">
-        </div>
-      </div>
-    </div>
-
-    <button id="saveBtn">Save</button>
   </div>
 
   <script type="module" src="script.js"></script>
