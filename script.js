@@ -84,7 +84,6 @@ if (document.getElementById('viewIdNumber')) {
     document.getElementById('viewName').textContent = data.fullName || '—';
     document.getElementById('viewAddress').textContent = data.address || '—';
     document.getElementById('viewExpiry').textContent = formatDate(data.expiryDate);
-    document.getElementById('viewMessage').textContent = data.message || '';
 
     const viewPhoto = document.getElementById('viewPhoto');
     const viewPhotoPlaceholder = document.getElementById('viewPhotoPlaceholder');
@@ -92,12 +91,6 @@ if (document.getElementById('viewIdNumber')) {
       viewPhoto.src = data.photo;
       viewPhoto.style.display = 'block';
       viewPhotoPlaceholder.style.display = 'none';
-    }
-
-    const viewSignature = document.getElementById('viewSignature');
-    if (data.signature) {
-      viewSignature.src = data.signature;
-      viewSignature.style.display = 'block';
     }
 
     const viewLogo = document.getElementById('viewLogo');
@@ -201,55 +194,6 @@ if (document.getElementById('saveBtn')) {
   const extraImagePlaceholder = document.getElementById('extraImagePlaceholder');
   wireImageUpload(extraImageArea, extraImageInput, extraImagePreview, extraImagePlaceholder, 500, 0.7, () => {});
 
-  const canvas = document.getElementById('signaturePad');
-  const ctx = canvas.getContext('2d');
-  let drawing = false;
-
-  function getPos(e) {
-    const rect = canvas.getBoundingClientRect();
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-    return {
-      x: (clientX - rect.left) * (canvas.width / rect.width),
-      y: (clientY - rect.top) * (canvas.height / rect.height)
-    };
-  }
-
-  function startDraw(e) {
-    drawing = true;
-    const pos = getPos(e);
-    ctx.beginPath();
-    ctx.moveTo(pos.x, pos.y);
-    e.preventDefault();
-  }
-
-  function draw(e) {
-    if (!drawing) return;
-    const pos = getPos(e);
-    ctx.lineTo(pos.x, pos.y);
-    ctx.strokeStyle = '#1a3d6d';
-    ctx.lineWidth = 2;
-    ctx.lineCap = 'round';
-    ctx.stroke();
-    e.preventDefault();
-  }
-
-  function endDraw() {
-    drawing = false;
-  }
-
-  canvas.addEventListener('mousedown', startDraw);
-  canvas.addEventListener('mousemove', draw);
-  canvas.addEventListener('mouseup', endDraw);
-  canvas.addEventListener('mouseleave', endDraw);
-canvas.addEventListener('touchstart', startDraw, { passive: false });
-canvas.addEventListener('touchmove', draw, { passive: false });
-canvas.addEventListener('touchend', endDraw, { passive: false });
-
-  document.getElementById('clearSig').addEventListener('click', () => {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-  });
-
   document.getElementById('saveBtn').addEventListener('click', async () => {
     const data = {
       idNumber: document.getElementById('idNumber').value,
@@ -258,9 +202,7 @@ canvas.addEventListener('touchend', endDraw, { passive: false });
       sex: document.getElementById('sex').value,
       address: document.getElementById('address').value,
       expiryDate: document.getElementById('expiryDate').value,
-      message: document.getElementById('message').value,
       photo: photoPreview.src,
-      signature: canvas.toDataURL('image/jpeg', 0.7),
 
       email: document.getElementById('email').value,
       phone: document.getElementById('phone').value,
@@ -305,16 +247,10 @@ canvas.addEventListener('touchend', endDraw, { passive: false });
       document.getElementById('sex').value = data.sex || '';
       document.getElementById('address').value = data.address || '';
       document.getElementById('expiryDate').value = data.expiryDate || '';
-      document.getElementById('message').value = data.message || '';
       if (data.photo && data.photo.startsWith('data:')) {
         photoPreview.src = data.photo;
         photoPreview.style.display = 'block';
         photoPlaceholder.style.display = 'none';
-      }
-      if (data.signature) {
-        const img = new Image();
-        img.onload = () => ctx.drawImage(img, 0, 0);
-        img.src = data.signature;
       }
 
       document.getElementById('email').value = data.email || '';
