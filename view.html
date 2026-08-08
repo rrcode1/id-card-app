@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ID Card</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="apple-touch-icon" href="icon.png">
+</head>
+<body>
+
+  <div id="loadingMsg" style="padding:40px; text-align:center; color:#555;">Loading...</div>
+
+  <div id="publicCard" style="display:none;">
+    <div class="card">
+      <div class="header" id="publicBanner">
+        <div class="logo-area" id="publicLogoArea">
+          <img id="pLogo" src="" alt="Logo" style="display:none;">
+        </div>
+        <h1>ID CARD</h1>
+      </div>
+      <div class="card-body">
+        <div class="photo-area">
+          <img id="pPhoto" src="" alt="Photo" style="display:none;">
+          <span id="pPhotoPlaceholder">No photo</span>
+        </div>
+        <div class="fields">
+          <div class="display-field"><span class="display-label">ID Number</span><span id="pIdNumber" class="display-value">—</span></div>
+          <div class="display-field"><span class="display-label">Date of Birth</span><span id="pDob" class="display-value">—</span></div>
+          <div class="display-field"><span class="display-label">Name</span><span id="pName" class="display-value">—</span></div>
+          <div class="display-field"><span class="display-label">Address</span><span id="pAddress" class="display-value">—</span></div>
+          <div class="display-field"><span class="display-label">Expiry Date</span><span id="pExpiry" class="display-value">—</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card extra-card">
+      <div class="subheader">Additional Details</div>
+      <div class="card-body-column">
+        <div class="display-field"><span class="display-label">Email</span><span id="pEmail" class="display-value">—</span></div>
+        <div class="display-field"><span class="display-label">Phone Number</span><span id="pPhone" class="display-value">—</span></div>
+        <div class="display-field"><span class="display-label">Family Name</span><span id="pFamilyName" class="display-value">—</span></div>
+        <div class="display-field"><span class="display-label">Conditions</span><span id="pConditions" class="display-value">—</span></div>
+        <div class="extra-image-area barcode">
+          <img id="pBarcode" src="" alt="Barcode" style="display:none;">
+          <span id="pBarcodePlaceholder">No image added</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="notFoundMsg" style="display:none; padding:40px; text-align:center; color:#555;">Card not found.</div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-app.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCdYRoNkG-H1G4YqO7djiVwrDPaQhnkCKE",
+      authDomain: "my-id-67723.firebaseapp.com",
+      databaseURL: "https://my-id-67723-default-rtdb.firebaseio.com",
+      projectId: "my-id-67723",
+      storageBucket: "my-id-67723.firebasestorage.app",
+      messagingSenderId: "412752951188",
+      appId: "1:412752951188:web:77b4f2396d25246664c181"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    function formatDate(isoDate) {
+      if (!isoDate) return '—';
+      const [year, month, day] = isoDate.split('-');
+      return `${day}-${month}-${year}`;
+    }
+
+    async function loadCard() {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id');
+      const loadingMsg = document.getElementById('loadingMsg');
+      const notFoundMsg = document.getElementById('notFoundMsg');
+      const publicCard = document.getElementById('publicCard');
+
+      if (!id) {
+        loadingMsg.style.display = 'none';
+        notFoundMsg.style.display = 'block';
+        return;
+      }
+
+      try {
+        const snap = await getDoc(doc(db, "cards", id));
+        if (!snap.exists()) {
+          loadingMsg.style.display = 'none';
+          notFoundMsg.style.display = 'block';
+          return;
+        }
+        const data = snap.data();
+
+        document.getElementById('pIdNumber').textContent = data.idNumber || '—';
+        document.getElementById('pDob').textContent = formatDate(data.dob);
+        document.getElementById('pName').textContent = data.fullName || '—';
+        document.getElementById('pAddress').textContent = data.address || '—';
+        document.getElementById('pExpiry').textContent = formatDate(data.expiryDate);
+
+        if (data.photo) {
+          document.getElementById('pPhoto').src = data.photo;
+          document.getElementById('pPhoto').style.display = 'block';
+          document.getElementById('pPhotoPlaceholder').style.display = 'none';
+        }
+        if (data.logo) {
+          document.getElementById('pLogo').src = data.logo;
+          document.getElementById('pLogo').style.display = 'block';
+        }
+        if (data.banner) {
+          const b = document.getElementById('publicBanner');
+          b.style.backgroundImage = `url(${data.banner})`;
+          b.style.backgroundSize = '100% 100%';
+          b.style.backgroundPosition = 'center';
+          b.style.backgroundRepeat = 'no-repeat';
+        }
+
+        document.getElementById('pEmail').textContent = data.email || '—';
+        document.getElementById('pPhone').textContent = data.phone || '—';
+        document.getElementById('pFamilyName').textContent = data.familyName || '—';
+        document.getElementById('pConditions').textContent = data.conditions || '—';
+
+        if (data.barcode) {
+          document.getElementById('pBarcode').src = data.barcode;
+          document.getElementById('pBarcode').style.display = 'block';
+          document.getElementById('pBarcodePlaceholder').style.display = 'none';
+        }
+
+        loadingMsg.style.display = 'none';
+        publicCard.style.display = 'block';
+      } catch (err) {
+        console.error(err);
+        loadingMsg.textContent = 'Error loading card.';
+      }
+    }
+
+    loadCard();
+  </script>
+</body>
+</html>
